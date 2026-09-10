@@ -3,8 +3,8 @@
 require __DIR__ . "/conexao/conexao.php";
 
 if ($conexao) {
-    echo "Conexão realizada com sucesso!";
-    echo "<br>Banco: " . $banco;
+    echo "<h1>Conexão realizada com sucesso!</h1>";
+    echo "<h1><br>Banco: " . $dbName;
     mysqli_close($conexao);
 } else {
     echo "Não foi possível conectar ao banco de dados.<br>";
