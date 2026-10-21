@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produtos e Acessórios</title>
+    <link rel="stylesheet" href="css/estilo.css?v=20260925">
+</head>
+<body class="theme-light">
+    <header>
+        <div class="container">
+            <div class="brand">Assistência Técnica</div>
+            <nav class="nav">
+                <a href="painel.php">Painel</a>
+                <a href="ordens.php">Ordens</a>
+                <a href="clientes.php">Clientes</a>
+                <a href="financeiro.php">Financeiro</a>
+                <a href="relatorios_financeiros.php">Relatórios</a>
+                <a href="logout.php">Sair</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="card page-header-card">
+            <div>
+                <p class="eyebrow">Estoque e acessórios</p>
+                <h1 class="page-title">Produtos e Acessórios</h1>
+            </div>
+            <div class="action-row">
+                <form method="get" class="search-form" role="search">
+                    <input type="search" name="q" value="" placeholder="Buscar por nome, categoria ou código..." aria-label="Pesquisar produtos">
+                    <button class="btn btn-primary" type="submit">🔎 Buscar</button>
+                </form>
+            </div>
+        </div>
+
+                    <div class="alert success">Venda registrada e estoque atualizado.</div>
+        
+        <section class="grid summary-grid">
+            <div class="metric card">
+                <span>Produtos</span>
+                <strong>3</strong>
+                <small>Total cadastrados</small>
+            </div>
+            <div class="metric card success">
+                <span>Estoque</span>
+                <strong>26</strong>
+                <small>Itens disponíveis</small>
+            </div>
+            <div class="metric card warning">
+                <span>Baixo estoque</span>
+                <strong>0</strong>
+                <small>Até 5 unidades</small>
+            </div>
+            <div class="metric card purple">
+                <span>Valor do estoque</span>
+                <strong>R$ 481,00</strong>
+                <small>Base em custo</small>
+            </div>
+        </section>
+
+        <section class="two-column-layout">
+            <div class="card">
+                <h3>Cadastrar produto</h3>
+                <form method="post" class="form-grid">
+                    <input type="hidden" name="tipo_form" value="produto">
+                    <input type="hidden" name="produto_id" value="0">
+
+                    <div>
+                        <label for="codigo">Código</label>
+                        <input id="codigo" name="codigo" value="" placeholder="Ex.: CAP-001">
+                    </div>
+                    <div>
+                        <label for="nome">Nome do produto</label>
+                        <input id="nome" name="nome" required value="" placeholder="Carregador, capa, fone...">
+                    </div>
+                    <div>
+                        <label for="categoria">Categoria</label>
+                        <input id="categoria" name="categoria" required value="" placeholder="Acessório, peça, etc.">
+                    </div>
+                    <div>
+                        <label for="quantidade">Quantidade</label>
+                        <input id="quantidade" type="number" min="0" name="quantidade" required value="0">
+                    </div>
+                    <div>
+                        <label for="valor_custo">Valor de custo</label>
+                        <input id="valor_custo" type="number" min="0" step="0.01" name="valor_custo" required value="0.00">
+                    </div>
+                    <div>
+                        <label for="valor_venda">Valor de venda</label>
+                        <input id="valor_venda" type="number" min="0" step="0.01" name="valor_venda" required value="0.00">
+                    </div>
+                    <div class="full-width">
+                        <label for="observacao">Observação</label>
+                        <textarea id="observacao" name="observacao" rows="3" placeholder="Detalhes do item, fornecedor ou observações..."></textarea>
+                    </div>
+
+                    <div class="full-width actions-row">
+                        <button class="btn btn-primary" type="submit">Cadastrar produto</button>
+                                            </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>Registrar venda por marketplace</h3>
+                <form method="post" class="form-grid">
+                    <input type="hidden" name="tipo_form" value="venda">
+                    <div>
+                        <label for="produto_id_venda">Produto</label>
+                        <select id="produto_id_venda" name="produto_id_venda" required>
+                            <option value="">Selecione</option>
+                                                            <option value="3">Produto De Teste 3 (Estoque: 8)</option>
+                                                            <option value="1">Produto Valida (Estoque: 8)</option>
+                                                            <option value="2">Produto Validacao Final (Estoque: 10)</option>
+                                                    </select>
+                    </div>
+                    <div>
+                        <label for="marketplace">Marketplace</label>
+                        <select id="marketplace" name="marketplace" required>
+                            <option value="">Selecione</option>
+                                                            <option value="Mercado Livre">Mercado Livre</option>
+                                                            <option value="Shopee">Shopee</option>
+                                                            <option value="Amazon">Amazon</option>
+                                                            <option value="Magazine Luiza">Magazine Luiza</option>
+                                                            <option value="Outros">Outros</option>
+                                                    </select>
+                    </div>
+                    <div>
+                        <label for="quantidade_venda">Quantidade</label>
+                        <input id="quantidade_venda" type="number" min="1" name="quantidade_venda" required value="1">
+                    </div>
+                    <div>
+                        <label for="valor_venda_unitario">Valor da venda</label>
+                        <input id="valor_venda_unitario" type="number" min="0" step="0.01" name="valor_venda_unitario" required value="0.00">
+                    </div>
+                    <div>
+                        <label for="cliente">Cliente (opcional)</label>
+                        <input id="cliente" name="cliente" placeholder="Nome do cliente">
+                    </div>
+                    <div>
+                        <label for="data_venda">Data da venda</label>
+                        <input id="data_venda" type="date" name="data_venda" value="2026-09-25">
+                    </div>
+                    <div class="full-width">
+                        <label for="observacao_venda">Observação</label>
+                        <textarea id="observacao_venda" name="observacao_venda" rows="3" placeholder="Detalhes da venda..."></textarea>
+                    </div>
+                    <div class="full-width actions-row">
+                        <button class="btn btn-primary" type="submit">Registrar venda</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="card table-card">
+            <div class="card-header-row">
+                <h3>Produtos cadastrados</h3>
+                <div class="export-links">
+                    <a class="btn btn-secondary" href="produtos.php?export=estoque">Exportar Excel</a>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Nome</th>
+                            <th>Categoria</th>
+                            <th>Estoque</th>
+                            <th>Custo</th>
+                            <th>Venda</th>
+                            <th>Cadastro</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                                                                                    <tr>
+                                    <td>VAL-300</td>
+                                    <td>Produto De Teste 3</td>
+                                    <td>Acessorio</td>
+                                    <td>
+                                        <span class="status-badge concluído">
+                                            8                                        </span>
+                                    </td>
+                                    <td>R$ 18,50</td>
+                                    <td>R$ 49,90</td>
+                                    <td>24/09/2026</td>
+                                    <td class="table-actions">
+                                        <a href="produtos.php?edit=3" class="btn btn-small btn-secondary">Editar</a>
+                                        <a href="produtos.php?delete=3" class="btn btn-small btn-danger" onclick="return confirm('Deseja excluir este produto?')">Excluir</a>
+                                    </td>
+                                </tr>
+                                                            <tr>
+                                    <td>VAL-001</td>
+                                    <td>Produto Valida</td>
+                                    <td>Acessório</td>
+                                    <td>
+                                        <span class="status-badge concluído">
+                                            8                                        </span>
+                                    </td>
+                                    <td>R$ 18,50</td>
+                                    <td>R$ 49,90</td>
+                                    <td>24/09/2026</td>
+                                    <td class="table-actions">
+                                        <a href="produtos.php?edit=1" class="btn btn-small btn-secondary">Editar</a>
+                                        <a href="produtos.php?delete=1" class="btn btn-small btn-danger" onclick="return confirm('Deseja excluir este produto?')">Excluir</a>
+                                    </td>
+                                </tr>
+                                                            <tr>
+                                    <td>VAL-100</td>
+                                    <td>Produto Validacao Final</td>
+                                    <td>Acessorio</td>
+                                    <td>
+                                        <span class="status-badge concluído">
+                                            10                                        </span>
+                                    </td>
+                                    <td>R$ 18,50</td>
+                                    <td>R$ 49,90</td>
+                                    <td>24/09/2026</td>
+                                    <td class="table-actions">
+                                        <a href="produtos.php?edit=2" class="btn btn-small btn-secondary">Editar</a>
+                                        <a href="produtos.php?delete=2" class="btn btn-small btn-danger" onclick="return confirm('Deseja excluir este produto?')">Excluir</a>
+                                    </td>
+                                </tr>
+                                                                        </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-header-row">
+                <h3>Últimas vendas por marketplace</h3>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Marketplace</th>
+                        <th>Produto</th>
+                        <th>Qtd</th>
+                        <th>Valor</th>
+                        <th>Data</th>
+                        <th>Cliente</th>
+                    </tr>
+                </thead>
+                <tbody>
+                                                                        <tr>
+                                <td>Mercado Livre</td>
+                                <td>Produto Valida</td>
+                                <td>2</td>
+                                <td>R$ 49,90</td>
+                                <td>24/09/2026</td>
+                                <td>Cliente Teste Final</td>
+                            </tr>
+                                                    <tr>
+                                <td>Mercado Livre</td>
+                                <td>Produto De Teste 3</td>
+                                <td>2</td>
+                                <td>R$ 49,90</td>
+                                <td>24/09/2026</td>
+                                <td>Cliente Teste 3</td>
+                            </tr>
+                                                            </tbody>
+            </table>
+        </section>
+    </main>
+
+    </body>
+</html>

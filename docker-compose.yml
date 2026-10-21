@@ -5,7 +5,7 @@ services:
     build: .
     container_name: assistencia_app
     ports:
-      - "8080:80"
+      - "80:80"
     volumes:
       - .:/var/www/html
     depends_on:

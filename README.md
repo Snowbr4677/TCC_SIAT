@@ -24,7 +24,7 @@ Projeto simples em PHP com conexão ao MySQL e autenticação básica de login.
    docker compose up --build
 
 4. Acesse:
-   - Aplicação: `http://localhost:8080`
+   - Aplicação: `http://localhost`
    - phpMyAdmin: `http://localhost:8081`
 
 5. Para o banco, as credenciais do container são:
@@ -43,3 +43,8 @@ Projeto simples em PHP com conexão ao MySQL e autenticação básica de login.
 O banco principal é `assistencia_tecnica`.
 
 O script `banco/assistencia_tecnica.sql` cria as tabelas e o usuário administrador padrão.
+
+Para a prévia do TCC, importe `banco/demo_seed.sql` pelo phpMyAdmin. A carga adiciona
+somente registros fictícios, não apaga dados existentes e pode ser executada novamente
+sem repetir os cadastros demonstrativos. Os registros de vendas, ordens e despesas
+ficam distribuídos pelos últimos dez meses para preencher os relatórios da apresentação.

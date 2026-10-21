@@ -1,12 +1,14 @@
 <?php
 session_start();
 
+require __DIR__ . "/conexao/conexao.php";
+
+exigirPerfilAdmin();
+
 if (!isset($_SESSION["usuario_id"])) {
     header("Location: login.php");
     exit;
 }
-
-require __DIR__ . "/conexao/conexao.php";
 
 if (isset($_GET["delete"])) {
     $id = (int)($_GET["delete"] ?? 0);
@@ -77,6 +79,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 
 $despesas = $conexao->query("SELECT * FROM despesas ORDER BY data_despesa DESC");
+
+$notificacoes = [
+    [
+        'titulo' => 'Despesas do mês',
+        'texto' => 'Verifique os gastos recentes e pendentes.',
+        'tipo' => 'warning'
+    ],
+    [
+        'titulo' => 'Controle financeiro',
+        'texto' => 'Acompanhe categoria por categoria.',
+        'tipo' => 'info'
+    ],
+    [
+        'titulo' => 'Resumo',
+        'texto' => 'Mantenha a organização do fluxo de caixa.',
+        'tipo' => 'success'
+    ]
+];
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -84,9 +104,9 @@ $despesas = $conexao->query("SELECT * FROM despesas ORDER BY data_despesa DESC")
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Despesas</title>
-    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="css/estilo.css?v=20260909">
 </head>
-<body>
+<body class="theme-light">
     <header>
         <div class="container">
             <div class="brand">Assistência Técnica</div>
@@ -95,6 +115,46 @@ $despesas = $conexao->query("SELECT * FROM despesas ORDER BY data_despesa DESC")
                 <a href="financeiro.php">Financeiro</a>
                 <a href="logout.php">Sair</a>
             </nav>
+
+            <div class="topbar-actions">
+                <div class="notification-wrapper">
+                    <button id="notificationToggle" class="header-notification" type="button" aria-label="Notificações" title="Notificações">
+                        🔔
+                        <span class="notification-badge"><?php echo min(count($notificacoes), 9); ?></span>
+                    </button>
+                    <div id="notificationDropdown" class="notification-dropdown" aria-live="polite" style="display: none;">
+                        <div class="notification-header">
+                            <strong>Notificações</strong>
+                        </div>
+                        <?php foreach ($notificacoes as $notificacao) : ?>
+                            <div class="notification-item type-<?php echo htmlspecialchars($notificacao['tipo']); ?>">
+                                <div class="notification-dot"></div>
+                                <div>
+                                    <strong><?php echo htmlspecialchars($notificacao['titulo']); ?></strong>
+                                    <span><?php echo htmlspecialchars($notificacao['texto']); ?></span>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+                <button id="themeToggle" class="btn btn-secondary theme-toggle" type="button" aria-label="Alternar tema" title="Alternar tema">☀️</button>
+
+                <div class="user-pill">
+                    <div class="profile-avatar-mini">
+                        <?php $avatar = $_SESSION['usuario_foto'] ?? 'default.svg'; ?>
+                        <?php if (!empty($avatar) && $avatar !== 'default.svg' && file_exists(__DIR__ . '/uploads/perfil/' . $avatar)) : ?>
+                            <img src="uploads/perfil/<?php echo htmlspecialchars($avatar); ?>" alt="Foto de perfil">
+                        <?php else : ?>
+                            <?php echo htmlspecialchars(strtoupper(substr($_SESSION['usuario_nome'] ?? 'U', 0, 1))); ?>
+                        <?php endif; ?>
+                    </div>
+                    <div>
+                        <span>Olá,</span>
+                        <strong><?php echo htmlspecialchars($_SESSION['usuario_nome'] ?? 'Usuário'); ?></strong>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -174,5 +234,42 @@ $despesas = $conexao->query("SELECT * FROM despesas ORDER BY data_despesa DESC")
             </table>
         </div>
     </main>
+
+    <script>
+        const notificationToggle = document.getElementById('notificationToggle');
+        const notificationDropdown = document.getElementById('notificationDropdown');
+
+        if (notificationToggle && notificationDropdown) {
+            notificationToggle.addEventListener('click', function (event) {
+                event.stopPropagation();
+                const isOpen = notificationDropdown.classList.contains('open');
+                notificationDropdown.classList.toggle('open', !isOpen);
+            });
+
+            document.addEventListener('click', function (event) {
+                if (!notificationDropdown.contains(event.target) && !notificationToggle.contains(event.target)) {
+                    notificationDropdown.classList.remove('open');
+                }
+            });
+        }
+
+        const body = document.body;
+        const themeToggle = document.getElementById('themeToggle');
+        const savedTheme = localStorage.getItem('theme');
+
+        if (savedTheme === 'dark') {
+            body.classList.add('theme-dark');
+            if (themeToggle) themeToggle.textContent = '🌙';
+        }
+
+        if (themeToggle) {
+            themeToggle.addEventListener('click', function () {
+                body.classList.toggle('theme-dark');
+                const darkMode = body.classList.contains('theme-dark');
+                localStorage.setItem('theme', darkMode ? 'dark' : 'light');
+                themeToggle.textContent = darkMode ? '🌙' : '☀️';
+            });
+        }
+    </script>
 </body>
 </html>

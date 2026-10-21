@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($email === "" || $senha === "") {
         $erro = "Preencha e-mail e senha.";
     } else {
-        $stmt = $conexao->prepare("SELECT id, nome, email, senha FROM usuarios WHERE email = ? LIMIT 1");
+        $stmt = $conexao->prepare("SELECT id, nome, email, senha, foto_perfil, perfil, status FROM usuarios WHERE email = ? LIMIT 1");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $resultado = $stmt->get_result();
@@ -21,12 +21,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $senhaValida = password_verify($senha, $dadosUsuario["senha"]) || $senha === $dadosUsuario["senha"];
 
             if ($senhaValida) {
-                $_SESSION["usuario_id"] = $dadosUsuario["id"];
-                $_SESSION["usuario_nome"] = $dadosUsuario["nome"];
-                $_SESSION["usuario_login"] = $dadosUsuario["email"];
+                if (strtolower($dadosUsuario["status"] ?? 'ativo') !== 'ativo') {
+                    $erro = "Usuário inativo. Entre em contato com o administrador.";
+                } else {
+                    $_SESSION["usuario_id"] = (int)$dadosUsuario["id"];
+                    $_SESSION["usuario_nome"] = $dadosUsuario["nome"];
+                    $_SESSION["usuario_login"] = $dadosUsuario["email"];
+                    $_SESSION["usuario_foto"] = $dadosUsuario["foto_perfil"] ?? "default.svg";
+                    $_SESSION["usuario_perfil"] = strtolower($dadosUsuario["perfil"] ?? 'admin');
+                    $_SESSION["usuario_status"] = strtolower($dadosUsuario["status"] ?? 'ativo');
 
-                header("Location: painel.php");
-                exit;
+                    registrarAuditoria($conexao, (int)$dadosUsuario["id"], 'login', 'acesso', 'Usuário logou no sistema');
+
+                    header("Location: painel.php");
+                    exit;
+                }
             } else {
                 $erro = "Senha incorreta.";
             }
@@ -42,9 +51,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="css/estilo.css?v=20260909">
 </head>
-<body>
+<body class="login-page">
     <header>
         <div class="container">
             <div class="brand">Assistência Técnica</div>
@@ -54,9 +63,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
     </header>
 
-    <main class="container" style="max-width: 500px;">
+    <main class="container">
         <div class="card">
-            <h2 class="page-title" style="margin-bottom: 10px;">Login</h2>
+            <h2 class="page-title" style="margin-bottom: 10px;">Acesse sua conta</h2>
+            <p class="login-subtitle">Gerencie sua assistência com praticidade e segurança.</p>
 
             <?php if ($erro !== "") : ?>
                 <div class="alert error"><?php echo htmlspecialchars($erro); ?></div>
